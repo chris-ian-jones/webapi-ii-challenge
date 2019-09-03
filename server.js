@@ -42,7 +42,7 @@ server.post('/api/posts', (req, res) => {
         db.findById(post.id)
           .then(newPost => {
             res.status(201).json({
-              "New Post": newPost[0]
+              newPost: newPost[0]
             })
           })
       })
@@ -53,6 +53,27 @@ server.post('/api/posts', (req, res) => {
         })
       })
   }
+})
+
+server.get('/api/posts/:id', (req, res) => {
+  const { id } = req.params
+  db.findById(id)
+    .then(post => {
+      if (post.length === 0){
+        res.status(404).json({
+          message: 'The post information could not be retrieved'
+        })
+      } else {
+        res.status(200).json({
+          post: post[0]
+        })
+      }
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: 'The post information could not be retrieved'
+      })
+    })
 })
 
 module.exports = server
