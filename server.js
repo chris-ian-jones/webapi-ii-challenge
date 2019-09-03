@@ -28,4 +28,31 @@ server.get('/api/posts', (req, res) => {
     })
 })
 
+server.post('/api/posts', (req, res) => {
+  const newPost = req.body
+
+  if (!req.body.title || !req.body.contents) {
+    res.status(400).json({
+      errorMessage: 'Please provide title and contents for the post'
+    })
+  } else {
+    db.insert(newPost)
+      .then(post => {
+        console.log(post)
+        db.findById(post.id)
+          .then(newPost => {
+            res.status(201).json({
+              "New Post": newPost[0]
+            })
+          })
+      })
+      .catch(err => {
+        console.log(err)
+        res.status(500).json({
+          error: 'There was an error while saving the post to the database'
+        })
+      })
+  }
+})
+
 module.exports = server
