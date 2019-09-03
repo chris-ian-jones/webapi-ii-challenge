@@ -61,7 +61,7 @@ server.get('/api/posts/:id', (req, res) => {
     .then(post => {
       if (post.length === 0){
         res.status(404).json({
-          message: 'The post information could not be retrieved'
+          message: 'The post with the specified ID does not exist.'
         })
       } else {
         res.status(200).json({
@@ -120,8 +120,8 @@ server.post('/api/posts/:id/comments', (req, res) => {
           .then(comment => {
             db.findCommentById(comment.id)
               .then(newComment => {
-                res.status(200).json({
-                  newComment
+                res.status(201).json({
+                  newComment: newComment[0]
                 })
               })
           })
