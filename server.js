@@ -76,4 +76,27 @@ server.get('/api/posts/:id', (req, res) => {
     })
 })
 
+server.get('/api/posts/:id/comments', (req, res) => {
+  const { id } = req.params
+  db.findById(id).then(post => {
+    if (post.length === 0){
+      res.status(404).json({
+        message: 'The post with the specified ID does not exist.'
+      })
+    } else {
+      db.findPostComments(id)
+        .then(comments => {
+          res.status(200).json({
+            comments
+          })
+        })
+        .catch(err => {
+          res.status(500).json({
+            error: 'The comments information could not be retrieved.'
+          })
+        })
+    }
+  }) 
+})
+
 module.exports = server
