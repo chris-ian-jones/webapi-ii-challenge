@@ -1,19 +1,11 @@
 const express = require('express')
 
-const server = express()
+const router = express.Router()
 
-const db = require('./data/db.js')
-
-server.use(express.json())
-
-server.get('/', (req, res) => {
-  res.status(200).json({
-    api: 'up...'
-  })
-})
+const db = require('./../data/db.js')
 
 // Returns an array of all the post objects contained in the database
-server.get('/api/posts', (req, res) => {
+router.get('/', (req, res) => {
   db.find()
     .then(posts => {
       res.status(200).json({
@@ -29,7 +21,7 @@ server.get('/api/posts', (req, res) => {
 
 
 // Creates a post using the information sent inside the request body
-server.post('/api/posts', (req, res) => {
+router.post('/', (req, res) => {
   const newPost = req.body
 
   // check if request body is missing the title or contents properties
@@ -60,7 +52,7 @@ server.post('/api/posts', (req, res) => {
 
 
 // Returns the post object with the specified id
-server.get('/api/posts/:id', (req, res) => {
+router.get('/:id', (req, res) => {
   // use destructuring to grab id from url
   const { id } = req.params
   // check to see if post with id exists
@@ -87,7 +79,7 @@ server.get('/api/posts/:id', (req, res) => {
 })
 
 // Returns an array of all the comment objects associated with the post with the specified id
-server.get('/api/posts/:id/comments', (req, res) => {
+router.get('/:id/comments', (req, res) => {
   // use destructuring to grab id from url
   const { id } = req.params
   // check to see if post with id exists
@@ -118,7 +110,7 @@ server.get('/api/posts/:id/comments', (req, res) => {
 
 
 // Creates a comment for the post with the specified id using information sent inside of the request body
-server.post('/api/posts/:id/comments', (req, res) => {
+router.post('/:id/comments', (req, res) => {
   // use destructuring to grab id from url
   const { id } = req.params
   // check to see if post with id exists
@@ -164,7 +156,7 @@ server.post('/api/posts/:id/comments', (req, res) => {
 
 
 // Removes the post with the specified id and returns the deleted post object. You may need to make additional calls to the database in order to satisfy this requirement
-server.delete('/api/posts/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
   // use destructuring to grab id from url
   const { id } = req.params
   // check to see if post with id exists
@@ -195,7 +187,7 @@ server.delete('/api/posts/:id', (req, res) => {
 
 
 // Updates the post with the specified id using data from the request body. Returns the modified document, NOT the original
-server.put('/api/posts/:id', (req, res) => {
+router.put('/:id', (req, res) => {
   // use destructuring to grab id from url
   const { id } = req.params
   // check to see if post with id exists
@@ -234,4 +226,4 @@ server.put('/api/posts/:id', (req, res) => {
     })
 })
 
-module.exports = server
+module.exports = router
